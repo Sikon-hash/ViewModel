@@ -1,10 +1,10 @@
 package com.example.volleyballscore
 
+import VolleyballScoreViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +27,7 @@ fun VolleyballScoreScreen(viewModel: VolleyballScoreViewModel = viewModel()) {
     val scoreB by viewModel.scoreTeamB.collectAsState()
     val setScore by viewModel.setScore.collectAsState()
     val gameScore by viewModel.gameScore.collectAsState()
+    val winner by viewModel.winner.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -40,12 +41,21 @@ fun VolleyballScoreScreen(viewModel: VolleyballScoreViewModel = viewModel()) {
         Text(text = "Set: $setScore")
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        if (winner != null) {
+            Text(
+                text = winner!!,
+                style = MaterialTheme.typography.h4,
+                color = MaterialTheme.colors.primary
+            )
+        }
+
         Row(horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(text = "Tim A", style = MaterialTheme.typography.h6)
                 Text(text = "$scoreA", style = MaterialTheme.typography.h4)
 
-                Button(onClick = { viewModel.addPoint("A") }) {
+                Button(onClick = { viewModel.addPoint("A") }, enabled = winner == null) {
                     Text(text = "Point A")
                 }
             }
@@ -54,7 +64,7 @@ fun VolleyballScoreScreen(viewModel: VolleyballScoreViewModel = viewModel()) {
                 Text(text = "Tim B", style = MaterialTheme.typography.h6)
                 Text(text = "$scoreB", style = MaterialTheme.typography.h4)
 
-                Button(onClick = { viewModel.addPoint("B") }) {
+                Button(onClick = { viewModel.addPoint("B") }, enabled = winner == null) {
                     Text(text = "Point B")
                 }
             }
